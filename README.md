@@ -59,22 +59,15 @@ This service manages shipments, integrates with multiple services, and demonstra
 
 ### User Flow
 
-```mermaid
-flowchart TD
-    A["User Registration"] --> B["Login"]
-    B --> C{"Check is_admin?"}
-    C -- No --> U1["View Products/Orders"]
-    U1 --> U2["Create Order via OrderViewSet"]
-    U2 --> U3["Validate Product & Price via Product Service"]
-    U3 --> U4["Order Created Successfully"]
-    U4 --> RU1["Appoint Order → Create Shipment"]
-    RU1 --> RU2["View My Shipments"]
-    RU2 --> RU3["Pay for Shipment"]
-    C -- Yes --> AU1["View All Shipments"]
-    AU1 --> AU2["Ship a Shipment"]
-    RU3 --> EndRU["Shipment Paid"]
-    AU2 --> EndAU["Shipment Shipped"]
+<img src="https://github.com/user-attachments/assets/5f01c270-0215-4a30-820a-116e597ee408" width="500" />
 
+---
+
+## 🐳 Docker Architecture
+
+### Docker Service Flow
+
+<img src="https://github.com/user-attachments/assets/ae16cce3-4e5a-4a6a-9c62-62a2a57c1d17" width="900" />
 
 
 
