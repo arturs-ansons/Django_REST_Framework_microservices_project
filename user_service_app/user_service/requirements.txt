@@ -1,0 +1,10 @@
+Django>=4.2
+djangorestframework
+djangorestframework-simplejwt
+mysqlclient
+pymysql
+gunicorn
+python-dotenv
+cryptography>=41.0
+requests
+django-extensions>=3.2

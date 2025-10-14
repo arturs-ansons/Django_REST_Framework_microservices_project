@@ -1,0 +1,35 @@
+services:
+  user_db:
+    image: mysql:8
+    container_name: user_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: user_service_db
+      MYSQL_ROOT_PASSWORD: supersecret111
+    ports:
+      - "3307:3306"
+    networks:
+      - ecommerce_net
+    volumes:
+      - user_db_data:/var/lib/mysql
+
+  user_service:
+    build: .
+    container_name: user_service
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - user_db
+    networks:
+      - ecommerce_net
+    volumes:
+      - .:/app
+
+volumes:
+  user_db_data:
+
+networks:
+  ecommerce_net:
+    external: true

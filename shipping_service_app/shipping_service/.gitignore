@@ -1,0 +1,16 @@
+# Python/Django service-specific ignores
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+.env
+
+# Docker overrides for this service
+*.pid
+docker-compose.override.yml
+
+# Ignore local IDE files
+.vscode/
+.idea/

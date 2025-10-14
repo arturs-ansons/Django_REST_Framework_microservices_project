@@ -1,0 +1,69 @@
+
+
+services:
+  # ------------------------
+  # MySQL Database
+  # ------------------------
+  shipping_db:
+    image: mysql:8
+    container_name: shipping_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: shipping_service_db
+      MYSQL_ROOT_PASSWORD: supersecret111
+    ports:
+      - "3310:3306"
+    networks:
+      - ecommerce_net
+    volumes:
+      - shipping_db_data:/var/lib/mysql
+
+  # ------------------------
+  # RabbitMQ with Management UI
+  # ------------------------
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"       # RabbitMQ messaging port
+      - "15672:15672"     # Management UI
+    networks:
+      - ecommerce_net
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # ------------------------
+  # Shipping Service
+  # ------------------------
+  shipping_service:
+    build: .
+    container_name: shipping_service
+    ports:
+      - "8004:8000"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=docker
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_QUEUE=shipping_events
+    depends_on:
+      - shipping_db
+      - rabbitmq
+    networks:
+      - ecommerce_net
+    volumes:
+      - .:/app
+
+volumes:
+  shipping_db_data:
+  rabbitmq_data:
+
+networks:
+  ecommerce_net:
+    external: true

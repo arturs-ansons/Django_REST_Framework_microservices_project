@@ -1,2 +1,24 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3
+
+# Env files
+.env
+
+# Docker
+*.log
+*.pid
+*.env
+*.dockerignore
+
+# Ignore virtual envs
+venv/
+.env/
+
+# But track microservices
+!user_service_app/
+!order_service_app/
+!product_service_app/
+!shipping_service_app/

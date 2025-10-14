@@ -1,0 +1,10 @@
+Django>=5.2
+djangorestframework
+djangorestframework-simplejwt
+requests
+pika
+python-dotenv
+pymysql
+cryptography>=41.0
+django-extensions
+tenacity>=9.1.2
