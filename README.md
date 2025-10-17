@@ -67,8 +67,7 @@ This service manages shipments, integrates with multiple services, and demonstra
 
 ### Docker Service Flow
 
-<img src="https://github.com/user-attachments/assets/ae16cce3-4e5a-4a6a-9c62-62a2a57c1d17" width="900" />
-
+<img src="https://github.com/user-attachments/assets/2e66ef44-e177-4504-9433-e19995cfd30b" width="900" />
 
 
 
