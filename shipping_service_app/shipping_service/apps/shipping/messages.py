@@ -46,6 +46,14 @@ VALIDATION_MESSAGES = {
             "message": "Shipment {shipment_id} created successfully.",
             "status": status.HTTP_201_CREATED,
         },
+        "shipment_deleted": {
+            "message": "Shipment {shipment_id} deleted successfully.",
+            "status": status.HTTP_200_OK,
+        },
+        "shipment_updated": {
+            "message": "Shipment {shipment_id} updated successfully.",
+            "status": status.HTTP_200_OK,
+        },
         "shipment_paid": {
             "message": "Shipment {shipment_id} paid successfully.",
             "status": status.HTTP_200_OK,
