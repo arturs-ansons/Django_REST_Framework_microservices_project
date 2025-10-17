@@ -1,5 +1,5 @@
 import os, logging, requests
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +10,7 @@ from .messages import VALIDATION_MESSAGES
 from .utils import publish_event
 from .authentication import ServiceJWTAuthentication
 from apps.shipping.permissions import IsJWTAdminUser
+from django.shortcuts import get_object_or_404
 
 
 # Elastic logging
@@ -206,3 +207,33 @@ class ShipmentViewSet(viewsets.ModelViewSet):
         )
 
         return get_response("success.shipment_shipped", shipment_id=shipment.id)
+    
+    @action(detail=True, methods=["delete"], url_path="delete", permission_classes=[IsJWTAdminUser])
+    def delete_shipment(self, request, pk=None):
+        shipment = get_object_or_404(Shipment, pk=pk)
+        shipment_id = shipment.id
+        shipment.delete()
+
+        logger.info(f"Shipment deleted: id={shipment_id}, user={request.user}")
+
+        publish_event("shipment.deleted", {"shipment_id": shipment_id})
+
+        return get_response("success.shipment_deleted", shipment_id=shipment_id)
+
+    @action(detail=True, methods=["patch"], url_path="update-shipment", permission_classes=[IsJWTAdminUser])
+    def update_shipment(self, request, pk=None):
+        shipment = get_object_or_404(Shipment, pk=pk)
+        serializer = ShipmentSerializer(shipment, data=request.data, partial=True)  # partial=True allows any subset
+        if serializer.is_valid():
+            serializer.save()
+
+            logger.info(
+                f"Shipment updated: id={shipment.id}, updated_fields={list(request.data.keys())}, user={request.user}"
+            )
+
+            return get_response("success.shipment_updated", shipment_id=shipment.id, shipment=serializer.data)
+        else:
+            logger.warning(
+                f"Shipment update failed: id={pk}, errors={serializer.errors}, user={request.user}"
+            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
