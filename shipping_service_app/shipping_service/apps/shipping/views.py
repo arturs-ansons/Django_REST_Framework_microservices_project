@@ -53,9 +53,11 @@ def get_response(key, **kwargs):
 
 
 class ShipmentViewSet(viewsets.ModelViewSet):
+
     serializer_class = ShipmentSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [ServiceJWTAuthentication]
+   
 
     def get_queryset(self):
         user = self.request.user
@@ -237,3 +239,5 @@ class ShipmentViewSet(viewsets.ModelViewSet):
                 f"Shipment update failed: id={pk}, errors={serializer.errors}, user={request.user}"
             )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        

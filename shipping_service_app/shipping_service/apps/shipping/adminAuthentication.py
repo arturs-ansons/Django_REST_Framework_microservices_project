@@ -29,3 +29,5 @@ class AdminJWTAuthentication(JWTAuthentication):
             raise exceptions.AuthenticationFailed("User not found", code="user_not_found")
 
         return user
+    
+    @action 
