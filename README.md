@@ -12,6 +12,7 @@ This service manages shipments, integrates with multiple services, and demonstra
 - Django REST Framework 3.16
 - MySQL
 - RabbitMQ
+- **Redis** for caching
 - JWT for authentication
 
 ---
@@ -45,6 +46,19 @@ This service manages shipments, integrates with multiple services, and demonstra
 - Handles **non-pending orders**, **forbidden actions**, and **service unavailability**
 - Ensures **production-ready reliability and robustness**
 
+### Caching
+
+- Uses **Redis** to cache shipment lists and frequently accessed data
+- Improves performance for **high-traffic endpoints**
+
+### CI/CD
+
+- **Continuous Integration & Deployment** implemented via GitHub Actions / other CI pipeline
+- Automatically:
+  - Runs **unit tests** and **linting**
+  - Builds Docker images
+  - Deploys to staging/production environments (configurable)
+
 ### Testing
 
 - Comprehensive **unit tests** cover:
@@ -68,6 +82,3 @@ This service manages shipments, integrates with multiple services, and demonstra
 ### Docker Service Flow
 
 <img src="https://github.com/user-attachments/assets/2e66ef44-e177-4504-9433-e19995cfd30b" width="900" />
-
-
-
