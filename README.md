@@ -12,7 +12,7 @@ This service manages shipments, integrates with multiple services, and demonstra
 - Django REST Framework 3.16
 - MySQL
 - RabbitMQ
-- **Redis** for caching
+- Redis for caching
 - JWT for authentication
 
 ---
