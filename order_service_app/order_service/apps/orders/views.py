@@ -18,6 +18,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     authentication_classes = [ServiceJWTAuthentication]
     permission_classes = [IsAuthenticated]
+    
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()

@@ -1,16 +1,15 @@
 
-
 services:
   # ------------------------
-  # MySQL Database
+  # MySQL Database (Shipping Service)
   # ------------------------
   shipping_db:
     image: mysql:8
     container_name: shipping_db
     restart: always
     environment:
-      MYSQL_DATABASE: shipping_service_db
-      MYSQL_ROOT_PASSWORD: supersecret111
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3310:3306"
     networks:
@@ -26,35 +25,58 @@ services:
     container_name: rabbitmq
     restart: always
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     ports:
-      - "5672:5672"       # RabbitMQ messaging port
-      - "15672:15672"     # Management UI
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - ecommerce_net
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
   # ------------------------
-  # Shipping Service
+  # Redis (Cache / Message Broker)
+  # ------------------------
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - ecommerce_net
+    volumes:
+      - redis_data:/data
+
+  # ------------------------
+  # Shipping Service (Django)
   # ------------------------
   shipping_service:
     build: .
     container_name: shipping_service
+    restart: always
     ports:
       - "8004:8000"
     env_file:
       - .env
     environment:
-      - ENVIRONMENT=docker
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_QUEUE=shipping_events
+      ENVIRONMENT: ${ENVIRONMENT}
+      DB_HOST: shipping_db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_QUEUE: ${RABBITMQ_QUEUE}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     depends_on:
       - shipping_db
       - rabbitmq
+      - redis
     networks:
       - ecommerce_net
     volumes:
@@ -63,6 +85,7 @@ services:
 volumes:
   shipping_db_data:
   rabbitmq_data:
+  redis_data:
 
 networks:
   ecommerce_net:

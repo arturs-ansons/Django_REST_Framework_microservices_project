@@ -1,11 +1,14 @@
 services:
+  # ------------------------
+  # MySQL Database (Product Service)
+  # ------------------------
   product_db:
     image: mysql:8
     container_name: product_db
     restart: always
     environment:
-      MYSQL_DATABASE: product_service_db
-      MYSQL_ROOT_PASSWORD: supersecret111
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3308:3306"
     networks:
@@ -13,6 +16,9 @@ services:
     volumes:
       - product_db_data:/var/lib/mysql
 
+  # ------------------------
+  # Product Service (Django)
+  # ------------------------
   product_service:
     build: .
     container_name: product_service

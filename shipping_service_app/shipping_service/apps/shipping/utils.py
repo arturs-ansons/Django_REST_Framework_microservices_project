@@ -1,14 +1,16 @@
-import json, pika, logging
+import json, pika, logging, os
 from tenacity import retry, stop_after_attempt, wait_exponential
-import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 # RabbitMQ config
-RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "rabbitmq")
-RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
-RABBITMQ_PASS = os.getenv("RABBITMQ_PASSWORD", "guest")
-RABBITMQ_QUEUE = os.getenv("RABBITMQ_QUEUE", "shipping_events")
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST")
+RABBITMQ_USER = os.getenv("RABBITMQ_USER")
+RABBITMQ_PASS = os.getenv("RABBITMQ_PASSWORD")
+RABBITMQ_QUEUE = os.getenv("RABBITMQ_QUEUE")
 
 # Retry up to 5 times with exponential backoff (2s → 30s)
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, min=2, max=30))

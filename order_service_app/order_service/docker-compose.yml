@@ -1,11 +1,16 @@
+
+
 services:
+  # ------------------------
+  # MySQL Database for Order Service
+  # ------------------------
   order_db:
     image: mysql:8
     container_name: order_db
     restart: always
     environment:
-      MYSQL_DATABASE: order_service_db
-      MYSQL_ROOT_PASSWORD: supersecret111
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3309:3306"
     networks:
@@ -13,9 +18,15 @@ services:
     volumes:
       - order_db_data:/var/lib/mysql
 
+  # ------------------------
+  # Django HTTP Server for Order Service
+  # ------------------------
   order_service:
     build: .
     container_name: order_service
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8003:8000"
     env_file:
@@ -26,6 +37,27 @@ services:
       - ecommerce_net
     volumes:
       - .:/app
+
+  # ------------------------
+  # RabbitMQ Consumer for Processing Shipping Events
+  # ------------------------
+  order_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    container_name: order_consumer
+    env_file:
+      - .env
+    depends_on:
+      - order_db
+      - order_service
+    networks:
+      - ecommerce_net
+    volumes:
+      - .:/app
+    restart: always
+    command: >
+      sh -c "sleep 10 && python apps/orders/consumer.py"
 
 volumes:
   order_db_data:

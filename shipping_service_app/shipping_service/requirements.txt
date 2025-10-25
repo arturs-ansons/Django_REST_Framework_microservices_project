@@ -10,3 +10,4 @@ django-extensions
 tenacity>=9.1.2
 pytest
 pytest-django
+django-redis==5.4.0

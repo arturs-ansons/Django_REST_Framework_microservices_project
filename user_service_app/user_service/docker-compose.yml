@@ -1,11 +1,14 @@
 services:
+  # ------------------------
+  # MySQL Database (User Service)
+  # ------------------------
   user_db:
     image: mysql:8
     container_name: user_db
     restart: always
     environment:
-      MYSQL_DATABASE: user_service_db
-      MYSQL_ROOT_PASSWORD: supersecret111
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3307:3306"
     networks:
@@ -13,6 +16,9 @@ services:
     volumes:
       - user_db_data:/var/lib/mysql
 
+  # ------------------------
+  # User Service (Django)
+  # ------------------------
   user_service:
     build: .
     container_name: user_service
