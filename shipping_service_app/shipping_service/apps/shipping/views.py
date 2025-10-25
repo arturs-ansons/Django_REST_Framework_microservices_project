@@ -77,11 +77,13 @@ class ShipmentViewSet(viewsets.ModelViewSet):
     # ------------------------
     @action(detail=False, methods=["get"], permission_classes=[IsJWTAdminUser])
     def all_shipments(self, request):
+
+        sort_order = request.query_params.get('sort', '-created_at')
         cached = get_cached_response("all_shipments", request)
         if cached:
             return cached
 
-        shipments = Shipment.objects.all()
+        shipments = Shipment.objects.all().order_by(sort_order)
         serializer = self.get_serializer(shipments, many=True)
         data = serializer.data
         set_cached_response("all_shipments", request, data)
