@@ -36,13 +36,12 @@ This service manages shipments, integrates with multiple services, and demonstra
 ### Microservices Integration
 
 - **Shipping Service** interacts with:
-  - **Order Service** via HTTP to validate orders
+  - **Order Service** via HTTP to validate orders and synchronize status
   - **Product Service** (via Order Service) for product/price verification
 - Publishes shipment events to **RabbitMQ** for asynchronous updates
-- **RabbitMQ Event Handler**:
-  - Consumes shipment events in **other services** (e.g., Product Service)
-  - Enables **automatic stock updates**, decoupled processing, and reliable event-driven architecture
+- **System supports internal event-driven flow** for asynchronous communication between services
 - Designed for **independent, event-driven microservices architecture**
+- Enables **decoupled microservices**, **reliable inventory updates**, and **scalable asynchronous processing**
 
 ### Error Handling & Edge Cases
 
@@ -79,11 +78,7 @@ This service manages shipments, integrates with multiple services, and demonstra
 
 ![User Flow](https://github.com/user-attachments/assets/5f01c270-0215-4a30-820a-116e597ee408)
 
-### Event-driven Architecture
 
-- **Shipment Service** publishes events (`shipment.paid`, `shipment.shipped`) to RabbitMQ  
-- **Product Service** listens for `shipment.shipped` events and updates stock automatically  
-- Enables **decoupled microservices**, **reliable inventory updates**, and **scalable asynchronous processing**  
 
 ---
 
