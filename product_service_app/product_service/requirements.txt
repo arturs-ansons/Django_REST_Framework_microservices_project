@@ -8,3 +8,5 @@ python-dotenv
 cryptography>=41.0
 requests
 django-extensions>=3.2
+pika
+tenacity

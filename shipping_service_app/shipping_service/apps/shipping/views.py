@@ -187,13 +187,36 @@ class ShipmentViewSet(viewsets.ModelViewSet):
         if not shipment.tracking_number:
             shipment.tracking_number = f"TRK{shipment.id:09d}"
 
+        # Fetch order details from Order service
+        order_id = shipment.order_id
+        headers = {"Authorization": request.headers.get("Authorization", "")}
+        if ENVIRONMENT != "production":
+            headers["Host"] = "localhost"
+
+        try:
+            resp = requests.get(f"{ORDER_SERVICE_URL}{order_id}/", headers=headers, timeout=5)
+            resp.raise_for_status()
+            order_data = resp.json()
+            product_id = order_data["product_id"]
+            quantity = order_data["quantity"]
+        except requests.RequestException as e:
+            return get_response("order_service_unavailable", detail=str(e))
+
+        # Update shipment status
         shipment.status = "shipped"
         shipment.save()
-
+        
         publish_event(
             "shipment.shipped",
-            {"shipment_id": shipment.id, "order_id": shipment.order_id, "tracking_number": shipment.tracking_number},
+            {
+                "shipment_id": shipment.id,
+                "order_id": shipment.order_id,
+                "product_id": product_id,
+                "quantity": quantity,
+                "tracking_number": shipment.tracking_number,
+            },
         )
+
         invalidate_cache_patterns(["my_shipments", "all_shipments"])
         return get_response("success.shipment_shipped", shipment_id=shipment.id)
 

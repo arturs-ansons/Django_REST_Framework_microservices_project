@@ -1,3 +1,4 @@
+
 services:
   # ------------------------
   # MySQL Database (Product Service)
@@ -17,7 +18,7 @@ services:
       - product_db_data:/var/lib/mysql
 
   # ------------------------
-  # Product Service (Django)
+  # Product Service API (Django)
   # ------------------------
   product_service:
     build: .
@@ -32,6 +33,24 @@ services:
       - ecommerce_net
     volumes:
       - .:/app
+    command: uvicorn product_service.asgi:application --host 0.0.0.0 --port 8000
+
+  # ------------------------
+  # Product Service Consumer (RabbitMQ)
+  # ------------------------
+  product_consumer:
+    build: .
+    container_name: product_consumer
+    env_file:
+      - .env
+    depends_on:
+      - product_db
+      - product_service
+    networks:
+      - ecommerce_net
+    volumes:
+      - .:/app
+    command: python apps/products/consumer.py
 
 volumes:
   product_db_data:

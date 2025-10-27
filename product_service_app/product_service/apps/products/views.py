@@ -1,12 +1,8 @@
-from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
+from rest_framework import viewsets
 
-class ProductListCreateView(generics.ListCreateAPIView):
+class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-class ProductDetailView(generics.RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'id'
+    lookup_field = "id"
