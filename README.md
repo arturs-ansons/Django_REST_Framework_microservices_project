@@ -44,6 +44,15 @@ This service manages shipments, integrates with multiple services, and demonstra
   - Enables **automatic stock updates**, decoupled processing, and reliable event-driven architecture
 - Designed for **independent, event-driven microservices architecture**
 
+### Event-driven Architecture
+
+- **Shipment Service** publishes **internal events** (`shipment.paid`, `shipment.shipped`) to RabbitMQ  
+  > ⚠️ **Internal use only:** These messages are not public APIs and are only consumed by other internal services.
+- **Product Service** listens for `shipment.shipped` events and updates stock automatically  
+- Enables **decoupled microservices**, **reliable inventory updates**, and **scalable asynchronous processing**  
+
+
+
 ### Error Handling & Edge Cases
 
 - Handles **non-pending orders**, **forbidden actions**, and **service unavailability**
@@ -78,12 +87,6 @@ This service manages shipments, integrates with multiple services, and demonstra
 ### User Flow
 
 ![User Flow](https://github.com/user-attachments/assets/5f01c270-0215-4a30-820a-116e597ee408)
-
-### Event-driven Architecture
-
-- **Shipment Service** publishes events (`shipment.paid`, `shipment.shipped`) to RabbitMQ  
-- **Product Service** listens for `shipment.shipped` events and updates stock automatically  
-- Enables **decoupled microservices**, **reliable inventory updates**, and **scalable asynchronous processing**  
 
 ---
 
