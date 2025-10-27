@@ -39,6 +39,9 @@ This service manages shipments, integrates with multiple services, and demonstra
   - **Order Service** via HTTP to validate orders
   - **Product Service** (via Order Service) for product/price verification
 - Publishes shipment events to **RabbitMQ** for asynchronous updates
+- **RabbitMQ Event Handler**:
+  - Consumes shipment events in **other services** (e.g., Product Service)
+  - Enables **automatic stock updates**, decoupled processing, and reliable event-driven architecture
 - Designed for **independent, event-driven microservices architecture**
 
 ### Error Handling & Edge Cases
@@ -58,6 +61,7 @@ This service manages shipments, integrates with multiple services, and demonstra
   - Runs **unit tests** and **linting**
   - Builds Docker images
   - Deploys to staging/production environments (configurable)
+  - Starts **RabbitMQ event consumers** for asynchronous microservice messaging
 
 ### Testing
 
@@ -73,7 +77,13 @@ This service manages shipments, integrates with multiple services, and demonstra
 
 ### User Flow
 
-<img src="https://github.com/user-attachments/assets/5f01c270-0215-4a30-820a-116e597ee408" width="500" />
+![User Flow](https://github.com/user-attachments/assets/5f01c270-0215-4a30-820a-116e597ee408)
+
+### Event-driven Architecture
+
+- **Shipment Service** publishes events (`shipment.paid`, `shipment.shipped`) to RabbitMQ  
+- **Product Service** listens for `shipment.shipped` events and updates stock automatically  
+- Enables **decoupled microservices**, **reliable inventory updates**, and **scalable asynchronous processing**  
 
 ---
 
@@ -81,5 +91,4 @@ This service manages shipments, integrates with multiple services, and demonstra
 
 ### Docker Service Flow
 
-<img src="https://github.com/user-attachments/assets/2142295c-c698-44a9-a4af-97ce29084b17" width="1000" />
-
+![Docker Flow](https://github.com/user-attachments/assets/2142295c-c698-44a9-a4af-97ce29084b17)
